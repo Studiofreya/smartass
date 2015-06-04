@@ -1,0 +1,7 @@
+# Lines starting with # are ignored
+# Whitespace lines are also ignored
+
+IRC_SERVER ip_or_hostname
+IRC_SERVER_PORT 6667
+NICK nick
+CHANNELS #abc,#def
