@@ -156,7 +156,7 @@ namespace smartass
 		// Bridge between raw and smart handlers
 		auto smartRawBridgeHandler = [&](const std::string & message)
 		{
-			m_IRC.parseLine(message);
+			m_IRC.readline(message);
 		};
 
 		addRawReadHandler(smartRawBridgeHandler);

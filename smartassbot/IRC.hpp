@@ -3,7 +3,8 @@
 //	IRC.hpp:
 //	
 //
-//		Just another IRC parser
+//		
+//		
 //
 //==============================================================================
 
@@ -13,11 +14,13 @@
 
 //	System dependencies ...
 #include <string>
+#include <memory>
 
 //	Boost dependencies ...
 
-//	Project dependencies ...
+//	Ogre dependencies ...
 
+//	Project dependencies ...
 
 namespace smartass
 {
@@ -29,11 +32,14 @@ namespace smartass
 			virtual ~IRC();
 
 		public:
-			void parseLine(const std::string & message);
+			void readline(const std::string & line);
 
-		private:
+		private:	
+			class impl;
+			std::unique_ptr<impl>	m_Impl;
 
 	};
+
 
 }
 
