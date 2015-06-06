@@ -36,6 +36,11 @@ namespace smartass
 		, m_Config(configfile)
 		, m_Connection()
 	{
+		m_IRC.setWriteFn([&](const std::string & msg)
+		{
+			m_Connection.write(msg);
+		});
+
 		createBasicRawReadHandlers();
 		createBasicSmartReadHandlers();
 
@@ -61,18 +66,15 @@ namespace smartass
 	{
 	}
 
-
 	void Bot::nick(const std::string& name)
 	{
-		m_Connection.write(std::string("NICK ") + name);
-		m_Connection.write(std::string("USER ") + name + " * * :" + name);
+		m_IRC.nick(name);
+		m_IRC.user(name);
 	}
 
-	void Bot::join(const std::string& channel, std::string key)
+	void Bot::join(const std::string& channels)
 	{
-		std::string cmd = std::string("JOIN ") + channel + " " + key;
-
-		m_Connection.write(cmd);
+		m_IRC.join(channels);
 	}
 
 	void Bot::part(const std::string& channel)
@@ -108,12 +110,10 @@ namespace smartass
 		m_Connection.write(cmd);
 	}
 
-	void Bot::pong(const std::string& to)
-	{
-		std::string cmd = std::string("PONG ") + to;
-
-		m_Connection.write(cmd);
-	}
+	//void Bot::pong(const std::string& to)
+	//{
+	//	//m_IRC
+	//}
 
 	void Bot::message(const std::string& receiver, const std::string& msg)
 	{
@@ -137,7 +137,7 @@ namespace smartass
 
 	void Bot::addRawReadHandler(const RawReadHandler & func)
 	{
-		m_RawReadHandlers.push_back(func);
+		m_RawReadHandlers.addHandle(func);
 	}
 
 	void Bot::createBasicRawReadHandlers()
@@ -287,11 +287,7 @@ namespace smartass
 			}
 
 			// ... do every message handler
-			for (const auto & func: m_RawReadHandlers)
-			{
-				func(line);
-			}
-
+			m_RawReadHandlers(line);
 		}
 
 	}

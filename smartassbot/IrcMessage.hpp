@@ -14,10 +14,13 @@
 
 //	System dependencies ...
 #include <string>
+#include <vector>
+#include <functional>
 
 //	Boost dependencies ...
 
 //	Project dependencies ...
+#include "CommandHandler.hpp"
 
 
 namespace smartass
@@ -28,14 +31,17 @@ namespace smartass
 		public:
 			explicit IrcMessage(
 				const std::string & command, 
-				const std::string & prefix, 
-				const std::string & parameters, 
-				const std::string & trail);
+				const std::string & prefix = "", 
+				const std::string & parameters = "", 
+				const std::string & trail = "");
 
 			virtual ~IrcMessage();
 
 		public:
-			std::string command() const;
+			std::string cmd()		const;
+			std::string origin()	const;
+			std::string params()	const;
+			std::string trail()		const;
 
 
 		private:
@@ -45,6 +51,9 @@ namespace smartass
 			std::string m_Trail;
 	};
 
+	// Our messages
+	typedef CommandHandler<IrcMessage>					IrcMessageCommand;
+	typedef IrcMessageCommand::func_t					IrcMessageHandle;
 }
 
 #endif

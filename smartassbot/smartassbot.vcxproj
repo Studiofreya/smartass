@@ -144,11 +144,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bot.hpp" />
+    <ClInclude Include="CommandHandler.hpp" />
     <ClInclude Include="Config.hpp" />
     <ClInclude Include="Connection.hpp" />
     <ClInclude Include="IRC.hpp" />
     <ClInclude Include="IrcParser.hpp" />
     <ClInclude Include="IrcMessage.hpp" />
+    <ClInclude Include="IrcTypes.hpp" />
     <ClInclude Include="Logger.hpp" />
   </ItemGroup>
   <ItemGroup>

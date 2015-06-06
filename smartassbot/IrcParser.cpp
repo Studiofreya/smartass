@@ -24,7 +24,7 @@ namespace smartass
 
 
 	IrcParser::IrcParser()
-		: m_Handlers()
+		: m_Handles()
 		, m_CommandHandlers()
 	{
 		using std::placeholders::_1;
@@ -130,22 +130,28 @@ namespace smartass
 		std::string trail = message.substr(pos);
 
 		IrcMessage ircmsg(command, prefix, parameters, trail);
-
-		for (const auto & h : m_Handlers)
-		{
-			h(ircmsg);
-		}
-	}
-
-	void IrcParser::addIrcReadHandler(const IrcReadHandler & handler)
-	{
-		m_Handlers.push_back(handler);
+		m_Handles(ircmsg);
 	}
 
 
-	void IrcParser::addIrcCommandHandler(const std::string & cmd, const IrcReadHandler & handler)
+	std::string IrcParser::parseMessage(const IrcMessage & message)
 	{
-		m_CommandHandlers[cmd].push_back(handler);
+		int baba=0;
+
+		return "<<< NOT IMPLEMENTED >>>";
+	}
+
+
+
+	void IrcParser::addIrcReadHandler(const IrcMessageHandle & handle)
+	{
+		m_Handles.addHandle(handle);
+	}
+
+
+	void IrcParser::addIrcCommandHandler(const std::string & cmd, const IrcMessageHandle & handler)
+	{
+		m_CommandHandlers[cmd].addHandle(handler);
 	}
 
 	void IrcParser::doCommandDispatch(const IrcMessage & msg)
@@ -154,13 +160,10 @@ namespace smartass
 
 		if (it != m_CommandHandlers.end())
 		{
-			const auto & handlers = it->second;
+			const auto & handles = it->second;
 
 			// Call each handler
-			for (const auto & h : handlers)
-			{
-				h(msg);
-			}
+			handles(msg);
 		}
 	}
 }

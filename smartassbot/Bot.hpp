@@ -23,6 +23,7 @@
 #include "Connection.hpp"
 #include "Config.hpp"
 #include "IRC.hpp"
+#include "CommandHandler.hpp"
 
 namespace smartass
 {
@@ -31,8 +32,10 @@ namespace smartass
 	{
 		public:
 			// Raw read handlers
-			typedef std::function<void(const std::string&)> RawReadHandler;
-			typedef std::vector<RawReadHandler>				RawReadHandlers;
+			//typedef std::function<void(const std::string&)> RawReadHandler;
+			//typedef std::vector<RawReadHandler>				RawReadHandlers;
+			typedef CommandHandler<std::string>				RawReadCommand;
+			typedef RawReadCommand::func_t					RawReadHandler;
 
 			// Smart read handlers
 			typedef std::function<void(const std::string &)>	SmartReadHandler;
@@ -48,12 +51,12 @@ namespace smartass
 		public:
 
 			void nick(const std::string& name);
-			void join(const std::string& channel, std::string key = "");
+			void join(const std::string& channels);
 			void part(const std::string& chann);
 			void invite(const std::string& name, const std::string& channel);
 			void kick(const std::string& name, const std::string& channel, const std::string & msg);
 			void op(const std::string& name, const std::string& channel);
-			void pong(const std::string& to);
+			//void pong(const std::string& to);
 			void message(const std::string& receiver, const std::string& msg);
 			void quit(const std::string& msg);
 			void waitForEvents();
@@ -68,7 +71,7 @@ namespace smartass
 			void ReadHandler(const std::string& message);
 
 			// Various handlers for various events
-			RawReadHandlers		m_RawReadHandlers;
+			RawReadCommand		m_RawReadHandlers;
 			SmartReadHandlers	m_SmartReadHandlers;
 
 			// Config

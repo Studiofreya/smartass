@@ -65,6 +65,12 @@
     <ClInclude Include="IRC.hpp">
       <Filter>IRC</Filter>
     </ClInclude>
+    <ClInclude Include="IrcTypes.hpp">
+      <Filter>IRC</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandHandler.hpp">
+      <Filter>IRC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="config.txt">
