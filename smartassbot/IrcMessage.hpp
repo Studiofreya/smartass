@@ -30,7 +30,7 @@ namespace smartass
 	{
 		public:
 			explicit IrcMessage(
-				const std::string & command, 
+				const std::string & command = "", 
 				const std::string & prefix = "", 
 				const std::string & parameters = "", 
 				const std::string & trail = "");
@@ -38,11 +38,13 @@ namespace smartass
 			virtual ~IrcMessage();
 
 		public:
-			std::string cmd()		const;
+			explicit operator bool() const;
+
+			// Details
+			std::string command()	const;
 			std::string origin()	const;
 			std::string params()	const;
 			std::string trail()		const;
-
 
 		private:
 			std::string m_Command;

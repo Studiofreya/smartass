@@ -27,6 +27,9 @@ namespace smartass
 		: m_Handles()
 		, m_CommandHandlers()
 	{
+		// Run selftests
+		selftest();
+
 		using std::placeholders::_1;
 
 		addIrcReadHandler(std::bind(&IrcParser::doCommandDispatch, this, _1));
@@ -36,8 +39,52 @@ namespace smartass
 	{
 	}
 
-	void IrcParser::parseLine(const std::string & message)
+	bool IrcParser::selftest()
 	{
+		//////////////////////////////////////////////////////////////////////////
+		// 
+		//  OK
+		//
+		//////////////////////////////////////////////////////////////////////////
+
+		std::vector<std::string> tests = 
+		{
+			"PING :server",
+			":server 001 beta2 :Hi, welcome to IRC",
+			":server 002 beta2 :Your host is server, running version miniircd-0.4",
+			":server 003 beta2 :This server was created sometime",
+			":server 004 beta2 :server miniircd-0.4 o o",
+			":server 251 beta2 :There are 2 users and 0 services on 1 server",
+			":server 422 beta2 :MOTD File is missing",
+			":beta2!beta2@10.0.0.34 JOIN #chan",
+			":server 331 beta2 #chan :No topic is set",
+			":server 353 beta2 = #chan :beta2 nd",
+			":server 366 beta2 #chan :End of NAMES list",
+			":beta2!beta2@10.0.0.34 JOIN #chan2",
+			":server 331 beta2 #chan2 :No topic is set",
+			":server 353 beta2 = #chan2 :beta2",
+			":server 366 beta2 #chan2 :End of NAMES list"
+		};
+
+		for (const auto & msg : tests)
+		{
+			IrcMessage ircmsg = parseLine(msg);
+
+			int baba=0;
+		}
+
+
+		return true;
+	}
+
+	IrcMessage IrcParser::parseLine(const std::string & message)
+	{
+		if (message.empty())
+		{
+			// Garbage in, garbage out
+			return IrcMessage();
+		}
+
 		// https://tools.ietf.org/html/rfc1459
 		// https://tools.ietf.org/html/rfc2812
 		// <message>  ::= [':' <prefix> <SPACE> ] <command> <params> <crlf>
@@ -60,9 +107,13 @@ namespace smartass
 		// Prefix, aka origin of message
 		bool havePrefix = message[0] == ':';
 
+		// Parameters... ?
 		auto firstSpace = message.find(" ");
 		bool haveFirstSpace = firstSpace != message.npos;
 
+		// Parameters are between command and trail
+		auto trailDivider = message.find(" :");
+		bool haveTrailDivider = trailDivider != message.npos;
 
 		std::string prefix;
 		std::string command;
@@ -74,7 +125,7 @@ namespace smartass
 			if (!haveFirstSpace)
 			{
 				logLine("ERROR", "Something wrong: " + message);
-				return;
+				return IrcMessage();
 			}
 
 			pos = 1;
@@ -88,27 +139,49 @@ namespace smartass
 			len = message.find(" ", firstSpace + 1) - pos;
 			command = message.substr(pos, len);
 
-			// Advance position
+			// Advance position to parameters or trail
 			pos = pos + len + 1;
 		}
 		else
 		{
+			// Get command
 			// We starts with command
 			if (haveFirstSpace)
 			{
-				// Command, with parameters
+				// Command, with possible parameters and/or trail
 				command = message.substr(firstSpace);
+				pos = firstSpace;
+
+				// Check if we have parameters and trail
+				if (haveTrailDivider)
+				{
+					size_t paramLength = trailDivider - firstSpace;
+
+					if (paramLength == 0)
+					{
+						// No parameters
+					}
+					else
+					{
+						// Parameters
+					}
+				}
+				else
+				{
+					// Rest is parameters
+					parameters = message.substr(pos+1);
+				}
 			}
 			else
 			{
 				// No parameters, only command
 				command = message;
 			}
+
+
+
 		}
 
-		// Parameters are between command and trail
-		auto trailDivider = message.find(" :");
-		bool haveTrailDivider = trailDivider != message.npos;
 
 		// Get command parameters
 		std::string parameters;
@@ -129,8 +202,11 @@ namespace smartass
 		pos = trailDivider + 2;
 		std::string trail = message.substr(pos);
 
+		// Construct an IrcMessage
 		IrcMessage ircmsg(command, prefix, parameters, trail);
 		m_Handles(ircmsg);
+
+		return ircmsg;
 	}
 
 
@@ -154,7 +230,7 @@ namespace smartass
 		m_CommandHandlers[cmd].addHandle(handler);
 	}
 
-	void IrcParser::doCommandDispatch(const IrcMessage & msg)
+	void IrcParser::doCommandDispatch(const IrcMessage & msg) const
 	{
 		const auto & it = m_CommandHandlers.find(msg.command());
 

@@ -35,9 +35,12 @@ namespace smartass
 			explicit IrcParser();
 			virtual ~IrcParser();
 
+		private:
+			bool selftest();
+
 		public:
 			// Parse a string to an IrcMessage
-			void parseLine(const std::string & message);
+			IrcMessage parseLine(const std::string & message);
 
 			// Construct a string from an IrcMessage
 			std::string parseMessage(const IrcMessage & message);
@@ -49,7 +52,7 @@ namespace smartass
 			void addIrcCommandHandler(const std::string & cmd, const IrcMessageHandle & handle);
 
 		private:
-			void doCommandDispatch(const IrcMessage & msg);
+			void doCommandDispatch(const IrcMessage & msg) const;
 
 		private:
 

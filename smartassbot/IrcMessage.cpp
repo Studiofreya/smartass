@@ -39,11 +39,30 @@ namespace smartass
 	{
 	}
 
+	IrcMessage::operator bool() const
+	{
+		return ! m_Command.empty();
+	}
+
 	std::string IrcMessage::command() const
 	{
 		return m_Command;
 	}
 
+	std::string IrcMessage::origin() const
+	{
+		return m_Prefix;
+	}
+
+	std::string IrcMessage::params() const
+	{
+		return m_Parameters;
+	}
+
+	std::string IrcMessage::trail() const
+	{
+		return m_Trail;
+	}
 }
 
 

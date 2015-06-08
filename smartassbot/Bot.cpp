@@ -179,22 +179,22 @@ namespace smartass
 			}
 		});
 
-		addRawReadHandler([&](const std::string& m)
-		{
-			std::istringstream iss(m);
-			std::string type, to, text;
-
-			iss >> type;
-
-			if (type == "PING") {
-				text = "";
-				while ((iss >> to)) {
-					text += to + " ";
-				}
-
-				pong(text);
-			}
-		});
+// 		addRawReadHandler([&](const std::string& m)
+// 		{
+// 			std::istringstream iss(m);
+// 			std::string type, to, text;
+// 
+// 			iss >> type;
+// 
+// 			if (type == "PING") {
+// 				text = "";
+// 				while ((iss >> to)) {
+// 					text += to + " ";
+// 				}
+// 
+// 				pong(text);
+// 			}
+// 		});
 
 		addRawReadHandler([&](const std::string& m)
 		{
