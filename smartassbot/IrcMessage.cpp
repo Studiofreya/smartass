@@ -39,6 +39,11 @@ namespace smartass
 	{
 	}
 
+	IrcMessage::operator bool() const
+	{
+		return ! m_Command.empty();
+	}
+
 	std::string IrcMessage::command() const
 	{
 		return m_Command;

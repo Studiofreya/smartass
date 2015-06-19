@@ -100,9 +100,5 @@ namespace smartass
 		//writeFn(msg);
 	}
 
-
-
-
 }
-
 
