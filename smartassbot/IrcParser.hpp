@@ -49,7 +49,7 @@ namespace smartass
 			void addIrcCommandHandler(const std::string & cmd, const IrcMessageHandle & handle);
 
 		private:
-			void doCommandDispatch(const IrcMessage & msg);
+			void doCommandDispatch(const IrcMessage & msg) const;
 
 		private:
 

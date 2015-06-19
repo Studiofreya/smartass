@@ -63,6 +63,7 @@ namespace smartass
 		auto firstSpace = message.find(" ");
 		bool haveFirstSpace = firstSpace != message.npos;
 
+		// PING :hades
 
 		std::string prefix;
 		std::string command;
@@ -129,6 +130,7 @@ namespace smartass
 		pos = trailDivider + 2;
 		std::string trail = message.substr(pos);
 
+		// Construct an IrcMessage
 		IrcMessage ircmsg(command, prefix, parameters, trail);
 		m_Handles(ircmsg);
 	}
@@ -154,7 +156,7 @@ namespace smartass
 		m_CommandHandlers[cmd].addHandle(handler);
 	}
 
-	void IrcParser::doCommandDispatch(const IrcMessage & msg)
+	void IrcParser::doCommandDispatch(const IrcMessage & msg) const
 	{
 		const auto & it = m_CommandHandlers.find(msg.command());
 

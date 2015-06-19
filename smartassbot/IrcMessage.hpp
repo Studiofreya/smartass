@@ -38,7 +38,7 @@ namespace smartass
 			virtual ~IrcMessage();
 
 		public:
-			std::string cmd()		const;
+			std::string command()		const;
 			std::string origin()	const;
 			std::string params()	const;
 			std::string trail()		const;
