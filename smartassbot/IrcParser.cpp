@@ -15,6 +15,8 @@
 #include <functional>
 
 //	Boost dependencies ...
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/split.hpp>
 
 //	Project dependencies ...
 #include "Logger.hpp"
@@ -49,26 +51,63 @@ namespace smartass
 
 		std::vector<std::string> tests = 
 		{
-			"PING :server",
-			":server 001 beta2 :Hi, welcome to IRC",
-			":server 002 beta2 :Your host is server, running version miniircd-0.4",
-			":server 003 beta2 :This server was created sometime",
-			":server 004 beta2 :server miniircd-0.4 o o",
-			":server 251 beta2 :There are 2 users and 0 services on 1 server",
-			":server 422 beta2 :MOTD File is missing",
-			":beta2!beta2@10.0.0.34 JOIN #chan",
-			":server 331 beta2 #chan :No topic is set",
-			":server 353 beta2 = #chan :beta2 nd",
-			":server 366 beta2 #chan :End of NAMES list",
-			":beta2!beta2@10.0.0.34 JOIN #chan2",
-			":server 331 beta2 #chan2 :No topic is set",
-			":server 353 beta2 = #chan2 :beta2",
-			":server 366 beta2 #chan2 :End of NAMES list"
+ 			"PING",									// Command
+ 			"PING :server",							// Command + trail
+			"PING param1 :server",					// Command + param + trail
+			":origin PING",							// Prefix + command
+			":origin PING :server",					// Prefix + command + trail
+			":origin PING param1 param2",			// Prefix + command + params
+			":origin PING param1 param2 :server",	// Prefix + command + params + trail
+
+			// Broken msgs
+			":",
+			": PING"
+			//":server 001 beta2 :Hi, welcome to IRC",
+			//":server 002 beta2 :Your host is server, running version miniircd-0.4",
+			//":server 003 beta2 :This server was created sometime",
+			//":server 004 beta2 :server miniircd-0.4 o o",
+			//":server 251 beta2 :There are 2 users and 0 services on 1 server",
+			//":server 422 beta2 :MOTD File is missing",
+			//":beta2!beta2@10.0.0.34 JOIN #chan",
+			//":server 331 beta2 #chan :No topic is set",
+			//":server 353 beta2 = #chan :beta2 nd",
+			//":server 366 beta2 #chan :End of NAMES list",
+			//":beta2!beta2@10.0.0.34 JOIN #chan2",
+			//":server 331 beta2 #chan2 :No topic is set",
+			//":server 353 beta2 = #chan2 :beta2",
+			//":server 366 beta2 #chan2 :End of NAMES list"
 		};
+
+		std::vector<IrcMessage> results =
+		{
+ 			IrcMessage("PING"),
+ 			IrcMessage("PING","", {}, "server"),
+			IrcMessage("PING", "", {"param1"}, "server"),
+			IrcMessage("PING", "origin"),
+			IrcMessage("PING", "origin", {}, "server"),
+			IrcMessage("PING", "origin", {"param1","param2"}, ""),
+			IrcMessage("PING", "origin", {"param1","param2"}, "server"),
+			IrcMessage(),
+			IrcMessage()
+		};
+
+		size_t i=0;
 
 		for (const auto & msg : tests)
 		{
 			IrcMessage ircmsg = parseLine(msg);
+
+			const IrcMessage & res = results[i++];
+
+			if (ircmsg != res)
+			{
+				int baba=0;
+				IrcMessage secondtest = parseLine(msg);
+			}
+			else
+			{
+				int bobo=0;
+			}
 
 			int baba=0;
 		}
@@ -104,8 +143,6 @@ namespace smartass
 		size_t pos = 0;
 		size_t len = 0;
 
-		// Prefix, aka origin of message
-		bool havePrefix = message[0] == ':';
 
 		// Parameters... ?
 		auto firstSpace = message.find(" ");
@@ -115,95 +152,84 @@ namespace smartass
 		auto trailDivider = message.find(" :");
 		bool haveTrailDivider = trailDivider != message.npos;
 
+		// Assemble outputs
+		std::vector<std::string> parts;
 		std::string prefix;
 		std::string command;
+		ParamType parameters;
+		std::string trail;
 
-		// Get prefix, if present
-		if (havePrefix)
+		// With or without trail
+		if (haveTrailDivider)
 		{
-			// Should have space if we have a prefix
-			if (!haveFirstSpace)
-			{
-				logLine("ERROR", "Something wrong: " + message);
-				return IrcMessage();
-			}
-
-			pos = 1;
-			len = firstSpace - pos;
-
-			// Get prefix
-			prefix = message.substr(pos, len);
-
-			// Get command
-			pos = firstSpace + 1;
-			len = message.find(" ", firstSpace + 1) - pos;
-			command = message.substr(pos, len);
-
-			// Advance position to parameters or trail
-			pos = pos + len + 1;
+			// Have trail, split by trail
+			boost::split(parts, message.substr(0, trailDivider), boost::is_any_of(" "));
+			trail = message.substr(trailDivider+2);
 		}
 		else
 		{
-			// Get command
-			// We starts with command
-			if (haveFirstSpace)
+			// No trail, everything are parameters
+			boost::split(parts, message, boost::is_any_of(" "));
+		}
+
+		enum class DecoderState
+		{
+			PREFIX,
+			COMMAND,
+			PARAMETER
+		} state;
+
+		bool first = true;
+		state = DecoderState::PREFIX;
+
+		for (const std::string & part : parts)
+		{
+			//if (first)
+
+
+			switch (state)
 			{
-				// Command, with possible parameters and/or trail
-				command = message.substr(firstSpace);
-				pos = firstSpace;
-
-				// Check if we have parameters and trail
-				if (haveTrailDivider)
+				// Prefix, or command... have to be decided
+				case DecoderState::PREFIX:
+				case DecoderState::COMMAND:
 				{
-					size_t paramLength = trailDivider - firstSpace;
+					// Prefix, aka origin of message
+					bool havePrefix = part[0] == ':';
 
-					if (paramLength == 0)
+					if (havePrefix && first)
 					{
-						// No parameters
+						// Oh the sanity
+						if (part.size() < 2)
+						{
+							return IrcMessage();
+						}
+
+						// Have prefix
+						state = DecoderState::COMMAND;
+						prefix = part.substr(1);
+						first = false;
 					}
 					else
 					{
-						// Parameters
+						// Have command
+						state = DecoderState::PARAMETER;
+						command = part;
 					}
+
+					break;
 				}
-				else
+				case DecoderState::PARAMETER:
 				{
-					// Rest is parameters
-					parameters = message.substr(pos+1);
+					parameters.push_back(part);
+					break;
 				}
 			}
-			else
-			{
-				// No parameters, only command
-				command = message;
-			}
-
-
 
 		}
 
-
-		// Get command parameters
-		std::string parameters;
-
-		if (haveTrailDivider)
-		{
-			// We have trail
-			len = trailDivider - pos;
-			parameters = message.substr(pos, len);
-		}
-		else
-		{
-			// Rest is parameters (no trail)
-			parameters = message.substr(pos);
-		}
-
-		// Trail is the remaining line
-		pos = trailDivider + 2;
-		std::string trail = message.substr(pos);
 
 		// Construct an IrcMessage
-		IrcMessage ircmsg(command, prefix, parameters, trail);
+		IrcMessage ircmsg(command, prefix, std::move(parameters), trail);
 		m_Handles(ircmsg);
 
 		return ircmsg;

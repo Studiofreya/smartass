@@ -26,7 +26,7 @@ namespace smartass
 	IrcMessage::IrcMessage(
 		const std::string & command, 
 		const std::string & prefix, 
-		const std::string & parameters,
+		ParamType && parameters,
 		const std::string & trail)
 		: m_Command(command)
 		, m_Prefix(prefix)
@@ -44,6 +44,20 @@ namespace smartass
 		return ! m_Command.empty();
 	}
 
+	bool IrcMessage::operator==(const IrcMessage & rhs) const
+	{
+		return 
+			m_Command		== rhs.m_Command && 
+			m_Prefix		== rhs.m_Prefix && 
+			m_Parameters	== rhs.m_Parameters && 
+			m_Trail			== rhs.m_Trail;
+	}
+
+	bool IrcMessage::operator!=(const IrcMessage & rhs) const
+	{
+		return ! (*this == rhs);
+	}
+
 	std::string IrcMessage::command() const
 	{
 		return m_Command;
@@ -54,7 +68,7 @@ namespace smartass
 		return m_Prefix;
 	}
 
-	std::string IrcMessage::params() const
+	const ParamType & IrcMessage::params() const
 	{
 		return m_Parameters;
 	}

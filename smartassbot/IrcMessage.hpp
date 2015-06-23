@@ -25,32 +25,36 @@
 
 namespace smartass
 {
+	typedef std::vector<std::string> ParamType;
 
 	class IrcMessage
 	{
+
 		public:
 			explicit IrcMessage(
 				const std::string & command = "", 
 				const std::string & prefix = "", 
-				const std::string & parameters = "", 
+				ParamType && parameters = ParamType(), 
 				const std::string & trail = "");
 
 			virtual ~IrcMessage();
 
 		public:
 			explicit operator bool() const;
+			bool operator == (const IrcMessage & rhs) const;
+			bool operator != (const IrcMessage & rhs) const;
 
 			// Details
-			std::string command()	const;
-			std::string origin()	const;
-			std::string params()	const;
-			std::string trail()		const;
+			std::string			command()	const;
+			std::string			origin()	const;
+			const ParamType		& params()	const;
+			std::string			trail()		const;
 
 		private:
-			std::string m_Command;
-			std::string m_Prefix;
-			std::string m_Parameters;
-			std::string m_Trail;
+			std::string			m_Command;
+			std::string			m_Prefix;
+			ParamType			m_Parameters;
+			std::string			m_Trail;
 	};
 
 	// Our messages
