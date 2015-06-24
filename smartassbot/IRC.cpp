@@ -87,7 +87,7 @@ namespace smartass
 
 	void IRC::doHandlePing(const IrcMessage & original)
 	{
-		auto to = original.origin();
+		auto to = original.trail();
 
 		std::string cmd = std::string("PONG ") + to;
 

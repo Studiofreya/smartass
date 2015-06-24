@@ -34,7 +34,7 @@ namespace smartass
 			explicit IrcMessage(
 				const std::string & command = "", 
 				const std::string & prefix = "", 
-				ParamType && parameters = ParamType(), 
+				ParamType && parameters = {}, 
 				const std::string & trail = "");
 
 			virtual ~IrcMessage();
