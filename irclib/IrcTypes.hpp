@@ -19,7 +19,7 @@
 //	Project dependencies ...
 
 
-namespace smartass
+namespace irclib
 {
 	class IrcMessage;
 }

@@ -27,12 +27,18 @@
     <ClInclude Include="IrcTypes.hpp">
       <Filter>IRC</Filter>
     </ClInclude>
+    <ClInclude Include="IRC.hpp">
+      <Filter>IRC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IrcMessage.cpp">
       <Filter>IRC</Filter>
     </ClCompile>
     <ClCompile Include="IrcParser.cpp">
+      <Filter>IRC</Filter>
+    </ClCompile>
+    <ClCompile Include="IRC.cpp">
       <Filter>IRC</Filter>
     </ClCompile>
   </ItemGroup>

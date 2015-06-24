@@ -32,16 +32,12 @@ namespace smartass
 	{
 		public:
 			// Raw read handlers
-			//typedef std::function<void(const std::string&)> RawReadHandler;
-			//typedef std::vector<RawReadHandler>				RawReadHandlers;
-			typedef CommandHandler<std::string>				RawReadCommand;
+			typedef irclib::CommandHandler<std::string>		RawReadCommand;
 			typedef RawReadCommand::func_t					RawReadHandler;
 
 			// Smart read handlers
 			typedef std::function<void(const std::string &)>	SmartReadHandler;
 			typedef std::map<std::string, SmartReadHandler>		SmartReadHandlers;
-				  
-
 
 		public:
 			explicit Bot(const std::string & config);
@@ -81,7 +77,7 @@ namespace smartass
 			Connection			m_Connection;
 
 			// IRC
-			IRC					m_IRC;
+			irclib::IRC			m_IRC;
 	};
 
 }

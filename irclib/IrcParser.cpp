@@ -20,7 +20,7 @@
 
 //	Project dependencies ...
 
-namespace smartass
+namespace irclib
 {
 
 

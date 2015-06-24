@@ -20,7 +20,7 @@
 #include "IrcParser.hpp"
 #include "CommandHandler.hpp"
 
-namespace smartass
+namespace irclib
 {
 
 	IRC::IRC()

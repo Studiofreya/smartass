@@ -21,7 +21,7 @@
 //	Project dependencies ...
 
 
-namespace smartass
+namespace irclib
 {
 	using namespace std::placeholders;
 

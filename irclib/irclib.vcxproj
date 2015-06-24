@@ -120,11 +120,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CommandHandler.hpp" />
+    <ClInclude Include="IRC.hpp" />
     <ClInclude Include="IrcMessage.hpp" />
     <ClInclude Include="IrcParser.hpp" />
     <ClInclude Include="IrcTypes.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="IRC.cpp" />
     <ClCompile Include="IrcMessage.cpp" />
     <ClCompile Include="IrcParser.cpp" />
   </ItemGroup>

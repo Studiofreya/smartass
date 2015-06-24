@@ -24,7 +24,7 @@
 #include "IrcMessage.hpp"
 #include "IrcParser.hpp"
 
-namespace smartass
+namespace irclib
 {
 
 	class IRC

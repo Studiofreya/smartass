@@ -23,7 +23,7 @@
 #include "IrcMessage.hpp"
 
 
-namespace smartass
+namespace irclib
 {
 
 	class IrcParser

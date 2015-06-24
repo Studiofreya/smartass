@@ -140,7 +140,6 @@
     <ClCompile Include="Bot.cpp" />
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="Connection.cpp" />
-    <ClCompile Include="IRC.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -148,7 +147,6 @@
     <ClInclude Include="Bot.hpp" />
     <ClInclude Include="Config.hpp" />
     <ClInclude Include="Connection.hpp" />
-    <ClInclude Include="IRC.hpp" />
     <ClInclude Include="Logger.hpp" />
   </ItemGroup>
   <ItemGroup>

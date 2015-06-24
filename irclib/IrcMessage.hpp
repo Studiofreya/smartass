@@ -23,7 +23,7 @@
 #include "CommandHandler.hpp"
 
 
-namespace smartass
+namespace irclib
 {
 	typedef std::vector<std::string> ParamType;
 
