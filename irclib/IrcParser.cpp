@@ -19,7 +19,6 @@
 #include <boost/algorithm/string/split.hpp>
 
 //	Project dependencies ...
-#include "Logger.hpp"
 
 namespace smartass
 {
