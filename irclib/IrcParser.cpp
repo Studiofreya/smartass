@@ -50,8 +50,8 @@ namespace irclib
 
 		std::vector<std::string> tests = 
 		{
- 			"PING",									// Command
- 			"PING :server",							// Command + trail
+			"PING",									// Command
+			"PING :server",							// Command + trail
 			"PING param1 :server",					// Command + param + trail
 			":origin PING",							// Prefix + command
 			":origin PING :server",					// Prefix + command + trail
@@ -79,8 +79,8 @@ namespace irclib
 
 		std::vector<IrcMessage> results =
 		{
- 			IrcMessage("PING"),
- 			IrcMessage("PING","", {}, "server"),
+			IrcMessage("PING"),
+			IrcMessage("PING","", {}, "server"),
 			IrcMessage("PING", "", {"param1"}, "server"),
 			IrcMessage("PING", "origin"),
 			IrcMessage("PING", "origin", {}, "server"),
@@ -100,15 +100,12 @@ namespace irclib
 
 			if (ircmsg != res)
 			{
-				int baba=0;
+				int breakpointhere=0;
 				IrcMessage secondtest = parseLine(msg);
-			}
-			else
-			{
-				int bobo=0;
+
+				(void*)breakpointhere;
 			}
 
-			int baba=0;
 		}
 
 
@@ -123,8 +120,12 @@ namespace irclib
 			return IrcMessage();
 		}
 
-		// https://tools.ietf.org/html/rfc1459
-		// https://tools.ietf.org/html/rfc2812
+		// https://tools.ietf.org/html/rfc1459	-- Original specification
+		// https://tools.ietf.org/html/rfc2810	-- Architecture specfication
+		// https://tools.ietf.org/html/rfc2811	-- Channel specification
+		// https://tools.ietf.org/html/rfc2812	-- Client specification
+		// https://tools.ietf.org/html/rfc2813	-- Server specification
+		//
 		// <message>  ::= [':' <prefix> <SPACE> ] <command> <params> <crlf>
 		// <prefix>   ::= <servername> | <nick> [ '!' <user> ] [ '@' <host> ]
 		// <command>  ::= <letter> { <letter> } | <number> <number> <number>
@@ -137,15 +138,6 @@ namespace irclib
 		//                  NUL or CR or LF>
 		// 
 		// <crlf>     ::= CR LF
-
-		// Extract with positions
-		size_t pos = 0;
-		size_t len = 0;
-
-
-		// Parameters... ?
-		auto firstSpace = message.find(" ");
-		bool haveFirstSpace = firstSpace != message.npos;
 
 		// Parameters are between command and trail
 		auto trailDivider = message.find(" :");
@@ -162,8 +154,9 @@ namespace irclib
 		if (haveTrailDivider)
 		{
 			// Have trail, split by trail
-			boost::split(parts, message.substr(0, trailDivider), boost::is_any_of(" "));
-			trail = message.substr(trailDivider+2);
+			std::string uptotrail = message.substr(0, trailDivider);
+			trail = message.substr(trailDivider + 2);
+			boost::split(parts, uptotrail, boost::is_any_of(" "));
 		}
 		else
 		{
@@ -183,8 +176,6 @@ namespace irclib
 
 		for (const std::string & part : parts)
 		{
-			//if (first)
-
 
 			switch (state)
 			{
@@ -237,8 +228,6 @@ namespace irclib
 
 	std::string IrcParser::parseMessage(const IrcMessage & message)
 	{
-		int baba=0;
-
 		return "<<< NOT IMPLEMENTED >>>";
 	}
 

@@ -23,6 +23,9 @@
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
 
+//	IRC dependencies
+#include <MultiSplit.hpp>
+
 //	Project dependencies ...
 #include "Logger.hpp"
 #include "Connection.hpp"
@@ -266,29 +269,26 @@ namespace smartass
 
 	void Bot::ReadHandler(const std::string& message)
 	{
-		// Working buffer
-		auto msg = message;
+		// Assume the input is complete... I.E. no half 
+		// messages or anything like that due to buffering
 
-		// Remove carriage returns
-		boost::replace_all(msg, "\r", "");
-
-		// Split message into lines (commands) and send them
 		std::vector<std::string> lines;
-		boost::split(lines, msg, boost::is_any_of("\n"));
+		std::string delimiter = "\r\n";
+		irclib::split(lines, message, delimiter);
 
-		// For each line ...
-		for (auto & line : lines)
-		{
-			boost::trim(line);
-
-			if (line.empty())
-			{
-				continue;
-			}
-
-			// ... do every message handler
-			m_RawReadHandlers(line);
-		}
+ 		// For each line ...
+ 		for (auto & line : lines)
+ 		{
+ 			boost::trim(line);
+ 
+ 			if (line.empty())
+ 			{
+ 				continue;
+ 			}
+ 
+ 			// ... do every message handler
+ 			m_RawReadHandlers(line);
+ 		}
 
 	}
 
