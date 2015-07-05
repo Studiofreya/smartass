@@ -31,8 +31,10 @@ namespace irclib
 	{
 
 		public:
+            explicit IrcMessage();
+
 			explicit IrcMessage(
-				const std::string & command = "", 
+				const std::string & command, 
 				const std::string & prefix = "", 
 				ParamType && parameters = {}, 
 				const std::string & trail = "");

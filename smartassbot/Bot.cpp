@@ -276,19 +276,19 @@ namespace smartass
 		std::string delimiter = "\r\n";
 		irclib::split(lines, message, delimiter);
 
- 		// For each line ...
- 		for (auto & line : lines)
- 		{
- 			boost::trim(line);
+		// For each line ...
+		for (auto & line : lines)
+		{
+			boost::trim(line);
  
- 			if (line.empty())
- 			{
- 				continue;
- 			}
+			if (line.empty())
+			{
+				continue;
+			}
  
- 			// ... do every message handler
- 			m_RawReadHandlers(line);
- 		}
+			// ... do every message handler
+			m_RawReadHandlers(line);
+		}
 
 	}
 

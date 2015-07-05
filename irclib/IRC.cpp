@@ -53,20 +53,20 @@ namespace irclib
 		writeFn(cmd);
 	}
 
-	void IRC::privmsg(const std::string & recipient, const std::string & text)
-	{
-
-	}
-
-	void IRC::part(const std::string & channel, const std::string & partmsg)
-	{
-
-	}
-
-	void IRC::quit(const std::string & quitmsg)
-	{
-
-	}
+	//void IRC::privmsg(const std::string & recipient, const std::string & text)
+	//{
+    //
+	//}
+    //
+	//void IRC::part(const std::string & channel, const std::string & partmsg)
+	//{
+    //
+	//}
+    //
+	//void IRC::quit(const std::string & quitmsg)
+	//{
+    //
+	//}
 
 
 	//////////////////////////////////////////////////////////////////////////
@@ -87,12 +87,16 @@ namespace irclib
 
 	void IRC::doHandlePing(const IrcMessage & original)
 	{
-		auto to = original.trail();
+        IrcMessage response("PONG", "", {original.trail()});
 
-		std::string cmd = std::string("PONG ") + to;
-
-		writeFn(cmd);
-
+        writeFn(m_Parser.parseMessage(response));
+        //
+		//auto to = original.trail();
+        //
+		//std::string cmd = std::string("PONG ") + to;
+        //
+		//writeFn(cmd);
+        //
 		//IrcMessage pongmsg("PONG");
 		//
 		//std::string msg = m_Parser.parseMessage(pongmsg);

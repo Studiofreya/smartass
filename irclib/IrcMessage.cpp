@@ -22,6 +22,13 @@
 namespace irclib
 {
 
+    IrcMessage::IrcMessage()
+        : m_Command()
+        , m_Prefix()
+        , m_Parameters{}
+        , m_Trail()
+    {
+    }
 
 	IrcMessage::IrcMessage(
 		const std::string & command, 
@@ -35,7 +42,7 @@ namespace irclib
 	{
 	}
 
-	IrcMessage::~IrcMessage()
+    IrcMessage::~IrcMessage()
 	{
 	}
 

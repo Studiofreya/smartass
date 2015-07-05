@@ -33,6 +33,15 @@
     <ClInclude Include="MultiSplit.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Channel.hpp">
+      <Filter>IRC</Filter>
+    </ClInclude>
+    <ClInclude Include="User.hpp">
+      <Filter>IRC</Filter>
+    </ClInclude>
+    <ClInclude Include="Backlog.hpp">
+      <Filter>IRC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IrcMessage.cpp">
@@ -42,6 +51,12 @@
       <Filter>IRC</Filter>
     </ClCompile>
     <ClCompile Include="IRC.cpp">
+      <Filter>IRC</Filter>
+    </ClCompile>
+    <ClCompile Include="Channel.cpp">
+      <Filter>IRC</Filter>
+    </ClCompile>
+    <ClCompile Include="User.cpp">
       <Filter>IRC</Filter>
     </ClCompile>
   </ItemGroup>
